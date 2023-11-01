@@ -12,15 +12,15 @@
           <span data-feather="users"></span>
           Usuários
         </a>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu dropend">
           <li><a class="dropdown-item" href="#">
-            <a class="nav-link" href="../graficos/graficos.php">
+            <a class="nav-link" href="../usuarios/graficos.php">
               <span data-feather="map"></span>
               Gráficos
             </a>
           </li>
           <li><a class="dropdown-item" href="#">
-            <a class="nav-link" href="../graficos/graficos.php">
+            <a class="nav-link" href="../usuarios/dispositivos.php">
               <span data-feather="activity"></span>
               Dispositivos
             </a>

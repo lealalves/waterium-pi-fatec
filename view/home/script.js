@@ -1,4 +1,6 @@
-var colors = ['#007bff','#28a745','#333333','#c3e6cb','#dc3545','#6c757d'];
+feather.replace({ 'aria-hidden': 'true' })
+
+var colors = ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d'];
   var chBar = document.getElementById("chBar"); 
   new Chart(chBar, {
   type: 'bar',
