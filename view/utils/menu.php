@@ -25,6 +25,12 @@
               Dispositivos
             </a>
           </li>
+          <li><a class="dropdown-item" href="#">
+            <a class="nav-link" href="../usuarios/cadastros.php">
+              <span data-feather="user-plus"></span>
+              Cadastros
+            </a>
+          </li>
         </ul>
       </li>
     </ul>
