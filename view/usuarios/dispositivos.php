@@ -54,10 +54,10 @@
         <table class="table table-striped table-sm">
           <thead>
             <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Nome</th>
-              <th scope="col">CPF</th>
-              <th scope="col">ID Aparelho</th>
+              <th onclick="teste(event)" data-value="id_conta" scope="col">ID</th>
+              <th value="nome" scope="col">Nome</th>
+              <th value="cpf" scope="col">CPF</th>
+              <th value="codigo_dispositivo" scope="col">ID Aparelho</th>
               <th scope="col">Bairro</th>
             </tr>
           </thead>
@@ -71,9 +71,12 @@
   </div>
 </div>
     <script>
-      window.onload = async (event) => {
+      let userList
+      function teste(event) {
+        console.log(event.target.dataset.value);
+      }
 
-        const quickSort = (arr, coluna) => {
+      function quickSort(arr, coluna) {
           if (arr.length <= 1) {
             return arr;
           }
@@ -92,7 +95,7 @@
           return [...quickSort(leftArr, coluna), pivot, ...quickSort(rightArr, coluna)];
         };
 
-
+      function async getUserList(params) {
         let table = document.querySelector("#userList")
 
         const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/usuarios/listar.php")
@@ -110,7 +113,14 @@
           `
           table.append(linha)
         })
+      }
 
+      window.onload = async (event) => {        
+        const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/usuarios/listar.php")
+        const res = await req.json()
+
+        userList = quickSort(res, "id_conta")
+        get
       };
     </script>
 
