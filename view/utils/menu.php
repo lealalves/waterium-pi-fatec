@@ -28,7 +28,7 @@
           <li><a class="dropdown-item" href="#">
             <a class="nav-link" href="../usuarios/cadastros.php">
               <span data-feather="user-plus"></span>
-              Cadastros
+              Cadastrar
             </a>
           </li>
         </ul>
