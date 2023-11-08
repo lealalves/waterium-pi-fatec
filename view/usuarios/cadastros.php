@@ -64,12 +64,12 @@
       <!-- Mensagem de Erro -->
       <div class="d-flex w-100 justify-content-center align-items-center">
         <div class="alert alert-danger" id="erro" style="display: none;">
-          <strong>Erro:</strong> Houve um problema no envio do formulário.
+          <strong>Erro:</strong>
         </div>
   
         <!-- Mensagem de Sucesso -->
         <div class="alert alert-success" id="sucesso" style="display: none;">
-          <strong>Sucesso:</strong> O formulário foi enviado com sucesso.
+          <strong>Sucesso:</strong>
         </div>
       </div>
     </main>
@@ -77,6 +77,9 @@
 </div>
     <script>
       let btnCadastrar = document.querySelector("#btnCadastrar")
+
+      let successComponent = document.querySelector("#sucesso")
+      let errorComponent = document.querySelector("#erro")
 
       btnCadastrar.addEventListener("click", async (event) => {
         event.preventDefault()
@@ -88,7 +91,7 @@
         formData.append("nome", nome)
         formData.append("cpf", cpf)
 
-        const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/cadastrar.php", {
+        const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/usuarios/cadastrar.php", {
           method: "POST",
           body:formData
         })
@@ -96,9 +99,11 @@
         const res = await req.json()
 
         if(res == "Usuario cadastrado com sucesso."){
-          document.querySelector("#sucesso").style.display = "initial"
+          successComponent.innerHTML = res
+          successComponent.style.display = "initial"
         } else {
-          document.querySelector("#erro").style.display = "initial"
+          errorComponent.innerHTML = res
+          errorComponent.style.display = "initial"
         }
 
         
