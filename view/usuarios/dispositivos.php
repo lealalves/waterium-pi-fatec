@@ -53,11 +53,11 @@
       <div class="table-responsive">
         <table class="table table-striped table-sm">
           <thead>
-            <tr>
-              <th onclick="teste(event)" data-value="id_conta" scope="col">ID</th>
-              <th value="nome" scope="col">Nome</th>
-              <th value="cpf" scope="col">CPF</th>
-              <th value="codigo_dispositivo" scope="col">ID Aparelho</th>
+            <tr onclick="sortBy(event)">
+              <th data-value="id_conta" scope="col">ID</th>
+              <th data-value="nome" scope="col">Nome</th>
+              <th data-value="cpf" scope="col">CPF</th>
+              <th data-value="codigo_dispositivo" scope="col">ID Aparelho</th>
               <th scope="col">Bairro</th>
             </tr>
           </thead>
@@ -72,11 +72,12 @@
 </div>
     <script>
       let userList
-      function teste(event) {
-        console.log(event.target.dataset.value);
+
+      function sortBy(event) {
+        setUserList(quickSort(userList, event.target.dataset.value))
       }
 
-      function quickSort(arr, coluna) {
+      const quickSort = (arr, coluna = "id_conta") => {
           if (arr.length <= 1) {
             return arr;
           }
@@ -85,7 +86,7 @@
           let rightArr = [];
           
           for (let i = 1; i < arr.length; i++) {
-            if (arr[i][coluna] > pivot[coluna]) {
+            if (arr[i][coluna] < pivot[coluna]) {
               leftArr.push(arr[i]);
             } else {
               rightArr.push(arr[i]);
@@ -95,14 +96,21 @@
           return [...quickSort(leftArr, coluna), pivot, ...quickSort(rightArr, coluna)];
         };
 
-      function async getUserList(params) {
+        const getUserList = async () => {
+        const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/usuarios/listar.php")
+
+        userList = await req.json()
+        setUserList(userList)
+      }
+
+      const setUserList = (arr) => {
         let table = document.querySelector("#userList")
 
-        const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/usuarios/listar.php")
-        const res = await req.json()
-        const listQuickSorted = quickSort(res, "nome")
+        while (table.firstChild) {
+          table.removeChild(table.firstChild);
+        }
 
-        listQuickSorted.map(item => {
+        arr.map(item => {
           let linha = document.createElement("tr")
           linha.innerHTML = `
           <td>${item.id_conta}</td>
@@ -115,12 +123,8 @@
         })
       }
 
-      window.onload = async (event) => {        
-        const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/usuarios/listar.php")
-        const res = await req.json()
-
-        userList = quickSort(res, "id_conta")
-        get
+      window.onload = async (event) => {
+        getUserList()        
       };
     </script>
 
