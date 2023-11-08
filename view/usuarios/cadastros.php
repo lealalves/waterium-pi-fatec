@@ -45,7 +45,6 @@
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2 p-2">Cadastros Usuários </h1>
       </div>
       <h1 class="h4">Cadastrar novo usuário</h1>      
       <div class="container mt-3 mb-3">
