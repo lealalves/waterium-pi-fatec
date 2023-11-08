@@ -48,27 +48,20 @@
         <h1 class="h2 p-2">Usuários</h1>
       </div>
 
-      <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+      <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Procurar...">
 
       <div class="table-responsive">
         <table class="table table-striped table-sm">
           <thead>
             <tr>
-              <th scope="col">#</th>
-              <th scope="col">Header</th>
-              <th scope="col">Header</th>
-              <th scope="col">Header</th>
-              <th scope="col">Header</th>
+              <th scope="col">ID</th>
+              <th scope="col">Nome</th>
+              <th scope="col">CPF</th>
+              <th scope="col">ID Aparelho</th>
+              <th scope="col">Bairro</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>1,001</td>
-              <td>random</td>
-              <td>data</td>
-              <td>placeholder</td>
-              <td>text</td>
-            </tr>
+          <tbody id="userList">
           </tbody>
         </table>
       </div>
@@ -77,10 +70,30 @@
     </main>
   </div>
 </div>
+    <script>
+      window.onload = async (event) => {
+        let table = document.querySelector("#userList")
+
+        const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/usuarios/listar.php")
+        const res = await req.json()
+        console.log(res);
+        res.map(item => {
+          let linha = document.createElement("tr")
+          linha.innerHTML = `
+          <td>${item.id_conta}</td>
+          <td>${item.nome}</td>
+          <td>${item.cpf}</td>
+          <td>${item.codigo_dispositivo}</td>
+          <td>BAIRRO</td>
+          `
+          table.append(linha)
+        })
+
+      };
+    </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-      <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script><script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script><script src="script.js"></script>
   </body>
 </html>
