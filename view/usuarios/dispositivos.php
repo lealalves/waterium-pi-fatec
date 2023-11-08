@@ -72,12 +72,34 @@
 </div>
     <script>
       window.onload = async (event) => {
+
+        const quickSort = (arr, coluna) => {
+          if (arr.length <= 1) {
+            return arr;
+          }
+          let pivot = arr[0];
+          let leftArr = [];
+          let rightArr = [];
+          
+          for (let i = 1; i < arr.length; i++) {
+            if (arr[i][coluna] > pivot[coluna]) {
+              leftArr.push(arr[i]);
+            } else {
+              rightArr.push(arr[i]);
+            }
+          }
+
+          return [...quickSort(leftArr, coluna), pivot, ...quickSort(rightArr, coluna)];
+        };
+
+
         let table = document.querySelector("#userList")
 
         const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/usuarios/listar.php")
         const res = await req.json()
-        console.log(res);
-        res.map(item => {
+        const listQuickSorted = quickSort(res, "nome")
+
+        listQuickSorted.map(item => {
           let linha = document.createElement("tr")
           linha.innerHTML = `
           <td>${item.id_conta}</td>
