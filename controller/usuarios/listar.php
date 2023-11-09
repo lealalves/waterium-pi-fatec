@@ -3,9 +3,9 @@ require_once("../conexao.php");
 
 $conexao = novaConexao();
 
-$querySelect = "SELECT u.cpf, u.nome, d.* 
+$querySelect = "SELECT u.id_conta as conta, u.cpf, u.nome, d.* 
                   FROM usuario u
-                  JOIN dispositivo d 
+                  LEFT JOIN dispositivo d 
                   ON u.id_conta = d.id_conta";
 
 try {
