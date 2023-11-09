@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once("../conexao.php");
 
 $conexao = novaConexao();
@@ -11,12 +11,20 @@ $querySelect = "SELECT u.cpf, u.nome, d.*
                   ON u.id_conta = d.id_conta
                   WHERE cpf = $cpf";
 
-$result = $conexao->query($querySelect);
-if($result->rowCount() > 0){
-  $result = $result->fetchAll(PDO::FETCH_ASSOC);
-  echo json_encode($result);
-} else {
-  echo json_encode(array("error" => "CPF nao encontrado."));
+
+try {
+
+  $result = $conexao->query($querySelect);
+  if ($result->rowCount() > 0) {
+    $result = $result->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($result);
+  } else {
+    echo json_encode(array("error" => "CPF nao encontrado."));
+  }
+
+} catch (PDOException $e) {
+  echo json_encode($e->getMessage());
+  exit;
 }
 
 ?>
