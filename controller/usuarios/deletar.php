@@ -1,19 +1,20 @@
 <?php
 require_once("../conexao.php");
 
-$id = $_GET["id"];
+$id = (int) $_GET["id"];
 
 $conexao = novaConexao();
 
-$deleteQuery = "DELETE FROM usuario WHERE id_conta = $id";
+$deleteQuery = "DELETE FROM usuario WHERE id_conta=?";
 
 try {
-  $result = $conexao->query($deleteQuery);
+  $result = $conexao->prepare($deleteQuery);
+  $result->execute([$id]);
 
-  if ($result->rowCount() > 0) {
+    if ($result->rowCount() > 0) {
     echo json_encode(array("mensagem" => "Usuário deletado com sucesso"));
   } else {
-    echo json_encode(array("erro" => "Erro ao deletar usuário"));
+    echo json_encode(array("erro" => "Erro ao deletar usuario"));
   }
 
 } catch (PDOException $e) {
