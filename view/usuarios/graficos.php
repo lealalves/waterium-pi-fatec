@@ -52,115 +52,112 @@
           <h1 class="h2 p-2">Detalhes Usuários </h1>
         </div>
 
-        <div class="d-flex justify-content-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-          <input id="searchCpf" class="form-control form-control-dark w-100" type="text" placeholder="Pesquisar por CPF"
-            aria-label="Procurar">
-          <button onclick="getUser()" type="button" class="btn btn-primary">Buscar</button>
+        <div class="d-flex flex-column justify-content-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+          <div class="d-flex w-50 justify-content-center mb-5">
+            <input id="searchCpf" class="form-control w-50 me-5" type="text" placeholder="Pesquisar por CPF"
+              aria-label="Procurar">
+            <button onclick="getUser()" type="button" class="btn btn-primary">Buscar</button>
+          </div>
+          <div class="col-lg-8">
+            <div class="card mb-4">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">Nome Completo</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <p id="txtUserName" class="text-muted mb-0"></p>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">CPF</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <p id="txtCpf" class="text-muted mb-0"></p>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">ID Dispositivo</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <p id="txtIdDispositivo" class="text-muted mb-0"></p>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">Latitude</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <p id="txtLatitude" class="text-muted mb-0"></p>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">Longitude</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <p id="txtLongitude" class="text-muted mb-0"></p>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex align-items-center justify-content-center mt-5 mb-5">
+                <div class="card text-center m-2" style="width: 12rem; height: 7rem">
+                  <div class="card-body">
+                    <h5 class="card-title h6">Qualidade</h5>
+                    <p class="card-text h1">?</p>
+                  </div>
+                </div>
+                <div class="card text-center m-2" style="width: 12rem; height: 7rem">
+                  <div class="card-body">
+                    <h5 class="card-title h6">Dispositivos</h5>
+                    <p class="card-text h1">?</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+  
+            <div class="row mb-5">
+              <div class="col-md-6 mt-2">
+                <div class="card">
+                  <div class="card-body">
+                    <canvas id="chBarPh"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mt-2">
+                <div class="card">
+                  <div class="card-body">
+                    <canvas id="chBarFluoreto"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="row mb-5">
+              <div class="col-md-6 mt-2">
+                <div class="card">
+                  <div class="card-body">
+                    <canvas id="chBarTurbidez"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mt-2">
+                <div class="card">
+                  <div class="card-body">
+                    <canvas id="chBarCloro"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div class="col-lg-8">
-          <div class="card mb-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-3">
-                  <p class="mb-0">Nome Completo</p>
-                </div>
-                <div class="col-sm-9">
-                  <p id="txtUserName" class="text-muted mb-0"></p>
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-sm-3">
-                  <p class="mb-0">CPF</p>
-                </div>
-                <div class="col-sm-9">
-                  <p id="txtCpf" class="text-muted mb-0"></p>
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-sm-3">
-                  <p class="mb-0">ID Dispositivo</p>
-                </div>
-                <div class="col-sm-9">
-                  <p id="txtIdDispositivo" class="text-muted mb-0"></p>
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-sm-3">
-                  <p class="mb-0">Latitude</p>
-                </div>
-                <div class="col-sm-9">
-                  <p id="txtLatitude" class="text-muted mb-0"></p>
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-sm-3">
-                  <p class="mb-0">Longitude</p>
-                </div>
-                <div class="col-sm-9">
-                  <p id="txtLongitude" class="text-muted mb-0"></p>
-                </div>
-              </div>
-            </div>
-            <div class="d-flex align-items-center justify-content-center mt-5 mb-5">
-              <div class="card text-center m-2" style="width: 12rem; height: 7rem">
-                <div class="card-body">
-                  <h5 class="card-title h6">Qualidade</h5>
-                  <p class="card-text h1">?</p>
-                </div>
-              </div>
-              <div class="card text-center m-2" style="width: 12rem; height: 7rem">
-                <div class="card-body">
-                  <h5 class="card-title h6">Dispositivos</h5>
-                  <p class="card-text h1">?</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="row mb-5">
-
-            <div class="col-md-6 mt-2">
-              <div class="card">
-                <div class="card-body">
-                  <canvas id="chBarPh"></canvas>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-6 mt-2">
-              <div class="card">
-                <div class="card-body">
-                  <canvas id="chBarFluoreto"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row mb-5">
-
-            <div class="col-md-6 mt-2">
-              <div class="card">
-                <div class="card-body">
-                  <canvas id="chBarTurbidez"></canvas>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-6 mt-2">
-              <div class="card">
-                <div class="card-body">
-                  <canvas id="chBarCloro"></canvas>
-                </div>
-              </div>
-            </div>
-
-          </div>
 
       </main>
     </div>
