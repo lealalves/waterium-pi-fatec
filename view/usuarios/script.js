@@ -24,80 +24,81 @@ const options = {
   }
 }
 
-
-new Chart(chBarPh, {
-  type: 'bar',
-  data: {
-    labels: ["Setembro", "Outubro", "Novembro"],
-    datasets: [{
-      label: "ph",
-      data: [7.50, 6.10, 5.70],
-      backgroundColor: colors[0],
-    }]
-  },
-  options: {
-    title: {
-      display: true,
-      text: "parâmetros pH"
+if (chBarPh) {
+  new Chart(chBarPh, {
+    type: 'bar',
+    data: {
+      labels: ["Setembro", "Outubro", "Novembro"],
+      datasets: [{
+        label: "ph",
+        data: [7.50, 6.10, 5.70],
+        backgroundColor: colors[0],
+      }]
     },
-    ...options
-  }
-});
+    options: {
+      title: {
+        display: true,
+        text: "parâmetros pH"
+      },
+      ...options
+    }
+  });
 
-new Chart(chBarFluoreto, {
-  type: 'bar',
-  data: {
-    labels: ["Setembro", "Outubro", "Novembro"],
-    datasets: [{
-      label: "ph",
-      data: [0.03, 0.07, 0.05],
-      backgroundColor: colors[1],
-    }]
-  },
-  options: {
-    title: {
-      display: true,
-      text: "parâmetros fluoreto"
+  new Chart(chBarFluoreto, {
+    type: 'bar',
+    data: {
+      labels: ["Setembro", "Outubro", "Novembro"],
+      datasets: [{
+        label: "ph",
+        data: [0.03, 0.07, 0.05],
+        backgroundColor: colors[1],
+      }]
     },
-    ...options
-  }
-});
+    options: {
+      title: {
+        display: true,
+        text: "parâmetros fluoreto"
+      },
+      ...options
+    }
+  });
 
-new Chart(chBarTurbidez, {
-  type: 'bar',
-  data: {
-    labels: ["Setembro", "Outubro", "Novembro"],
-    datasets: [{
-      label: "ph",
-      data: [1.20, 1, 1.50],
-      backgroundColor: colors[2],
-    }]
-  },
-  options: {
-    title: {
-      display: true,
-      text: "parâmetros turbidez"
+  new Chart(chBarTurbidez, {
+    type: 'bar',
+    data: {
+      labels: ["Setembro", "Outubro", "Novembro"],
+      datasets: [{
+        label: "ph",
+        data: [1.20, 1, 1.50],
+        backgroundColor: colors[2],
+      }]
     },
-    ...options
-  }
-});
+    options: {
+      title: {
+        display: true,
+        text: "parâmetros turbidez"
+      },
+      ...options
+    }
+  });
 
-new Chart(chBarCloro, {
-  type: 'bar',
-  data: {
-    labels: ["Setembro", "Outubro", "Novembro"],
-    datasets: [{
-      label: "ph",
-      data: [0.80, 1, 0.50],
-      backgroundColor: colors[5],
-    }]
-  },
-  options: {
-    title: {
-      display: true,
-      text: "parâmetros cloro"
+  new Chart(chBarCloro, {
+    type: 'bar',
+    data: {
+      labels: ["Setembro", "Outubro", "Novembro"],
+      datasets: [{
+        label: "ph",
+        data: [0.80, 1, 0.50],
+        backgroundColor: colors[5],
+      }]
     },
-    ...options
-  }
-});
+    options: {
+      title: {
+        display: true,
+        text: "parâmetros cloro"
+      },
+      ...options
+    }
+  });
 
+}
