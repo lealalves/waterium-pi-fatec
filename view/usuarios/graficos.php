@@ -47,18 +47,27 @@
       <?php require_once("../utils/menu.php") ?>
 
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <input type="hidden" name="cpfUser">
+        <input type="hidden" name="idDispositivo">
         <div
           class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           <h1 class="h2 p-2">Detalhes Usuários </h1>
         </div>
 
-        <div class="d-flex flex-column justify-content-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+        <div
+          class="d-flex flex-column justify-content-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
           <div class="d-flex w-50 justify-content-center mb-5">
             <input id="searchCpf" class="form-control w-50 me-5" type="text" placeholder="Pesquisar por CPF"
               aria-label="Procurar">
             <button onclick="getUser()" type="button" class="btn btn-primary">Buscar</button>
           </div>
-          <div class="col-lg-8">
+          <div class="alert alert-danger" id="erro" style="display: none;">
+            <strong>Erro:</strong>
+          </div>
+          <div class="alert alert-success" id="sucesso" style="display: none;">
+            <strong>Sucesso:</strong>
+          </div>
+          <div id="userProfile" class="col-lg-8" style="display: none;">
             <div class="card mb-4">
               <div class="card-body">
                 <div class="row">
@@ -79,30 +88,32 @@
                   </div>
                 </div>
                 <hr>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <p class="mb-0">ID Dispositivo</p>
+                <div id="deviceInProfile" style="display: none">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">ID Dispositivo</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p id="txtIdDispositivo" class="text-muted mb-0"></p>
+                    </div>
                   </div>
-                  <div class="col-sm-9">
-                    <p id="txtIdDispositivo" class="text-muted mb-0"></p>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Latitude</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p id="txtLatitude" class="text-muted mb-0"></p>
+                    </div>
                   </div>
-                </div>
-                <hr>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <p class="mb-0">Latitude</p>
-                  </div>
-                  <div class="col-sm-9">
-                    <p id="txtLatitude" class="text-muted mb-0"></p>
-                  </div>
-                </div>
-                <hr>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <p class="mb-0">Longitude</p>
-                  </div>
-                  <div class="col-sm-9">
-                    <p id="txtLongitude" class="text-muted mb-0"></p>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Longitude</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p id="txtLongitude" class="text-muted mb-0"></p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -120,38 +131,44 @@
                   </div>
                 </div>
               </div>
+              <button type="button" class="btn btn-primary m-auto mb-5 w-50" onClick="deleteUser()">Deletar
+                Usuário</button>
             </div>
-  
-  
-            <div class="row mb-5">
-              <div class="col-md-6 mt-2">
-                <div class="card">
-                  <div class="card-body">
-                    <canvas id="chBarPh"></canvas>
+            <div id="deviceInfo" style="display: none;">
+              <div class="d-flex justify-content-between align-items-center text-center mb-2">
+                <h5>Informações do dispositivo: <span id="idDevice"></span></h5>
+                <button type="button" class="btn btn-primary" onclick="deleteDevice()">Apagar Dispositivo</button>
+              </div>
+              <div class="row mb-5">
+                <div class="col-md-6 mt-2">
+                  <div class="card">
+                    <div class="card-body">
+                      <canvas id="chBarPh"></canvas>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 mt-2">
+                  <div class="card">
+                    <div class="card-body">
+                      <canvas id="chBarFluoreto"></canvas>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="col-md-6 mt-2">
-                <div class="card">
-                  <div class="card-body">
-                    <canvas id="chBarFluoreto"></canvas>
+
+              <div class="row mb-5">
+                <div class="col-md-6 mt-2">
+                  <div class="card">
+                    <div class="card-body">
+                      <canvas id="chBarTurbidez"></canvas>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-  
-            <div class="row mb-5">
-              <div class="col-md-6 mt-2">
-                <div class="card">
-                  <div class="card-body">
-                    <canvas id="chBarTurbidez"></canvas>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 mt-2">
-                <div class="card">
-                  <div class="card-body">
-                    <canvas id="chBarCloro"></canvas>
+                <div class="col-md-6 mt-2">
+                  <div class="card">
+                    <div class="card-body">
+                      <canvas id="chBarCloro"></canvas>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -163,22 +180,30 @@
     </div>
   </div>
   <script>
-    const getUser = async (e) => {
-      const txtCpf = document.querySelector("#searchCpf").value
+    const inputHiddenCpf = document.getElementsByName("cpfUser")
+    const inputHiddenIdDispositivo = document.getElementsByName("idDispositivo")
 
-      let formData = new FormData();
-      formData.append('cpf', txtCpf);
-      const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/usuarios/listarUnico.php", {
-        method: "POST",
-        body: formData
-      })
+    const getUser = async (e = null, query = null) => {
+      const cpf = query != null ? query : document.querySelector("#searchCpf").value
 
-      const res = await req.json()
+      if (cpf) {
+        let formData = new FormData();
+        formData.append('cpf', cpf);
+        const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/usuarios/listarUnico.php", {
+          method: "POST",
+          body: formData
+        })
 
-      if (res.error) {
-        console.log(res.error);
-      } else {
-        setUser(res)
+        const res = await req.json()
+
+        if (res.error) {
+          console.log(res.error);
+          document.querySelector("#erro").innerHTML = res.error
+          document.querySelector("#erro").style.display = "initial"
+        } else {
+          document.querySelector("#userProfile").style = "initial"
+          setUser(res)
+        }
       }
     }
 
@@ -190,15 +215,72 @@
       const txtIdDispositivo = document.querySelector("#txtIdDispositivo")
       const txtLatitude = document.querySelector("#txtLatitude")
       const txtLongitude = document.querySelector("#txtLongitude")
+      const txtDeviceSpan = document.querySelector("#idDevice")
+
 
       arr.map(item => {
-        txtUserName.innerHTML = item.nome
         txtCpf.innerHTML = item.cpf
-        txtIdDispositivo.innerHTML = item.codigo_dispositivo
-        txtLatitude.innerHTML = item.latitude
-        txtLongitude.innerHTML = item.longitude
+        inputHiddenCpf.value = item.cpf
+        txtUserName.innerHTML = item.nome
+
+        if(item.codigo_dispositivo){
+          txtIdDispositivo.innerHTML = item.codigo_dispositivo
+          txtLatitude.innerHTML = item.latitude
+          txtLongitude.innerHTML = item.longitude
+  
+          txtDeviceSpan.innerHTML = item.codigo_dispositivo
+          inputHiddenIdDispositivo.value = item.codigo_dispositivo
+
+          document.querySelector("#deviceInfo").style.display = "initial"
+          document.querySelector("#deviceInProfile").style.display = "initial"
+        }
       })
+
     }
+
+
+    const deleteUser = async () => {
+      const cpf = inputHiddenCpf.value
+      const req = await fetch(`http://localhost:80/waterium-pi-fatec/controller/usuarios/deletar.php?cpf=${cpf}`)
+      const res = await req.json()
+
+      if (!res.mensagem) {
+        console.log(res);
+      } else {
+        document.querySelector("#sucesso").innerHTML = res.mensagem
+        document.querySelector("#sucesso").style.display = "initial"
+
+        setTimeout(() => {
+          document.location.reload()
+        }, 2000)
+      }
+
+    }
+
+    const deleteDevice = async () => {
+      const codigo_dispositivo = inputHiddenIdDispositivo.value
+      const req = await fetch(`http://localhost:80/waterium-pi-fatec/controller/dispositivos/deletar.php?codigo_dispositivo=${codigo_dispositivo}`)
+      
+      const res = await req.json()
+      if (!res.mensagem) {
+        console.log(res);
+      } else {
+        document.querySelector("#sucesso").innerHTML = res.mensagem
+        document.querySelector("#sucesso").style.display = "initial"
+
+        setTimeout(() => {
+          document.location.reload()
+        }, 2000)
+      }
+    }
+
+    const obterParametroURL = (nomeParametro) => {
+      var urlSearchParams = new URLSearchParams(window.location.search);
+      return urlSearchParams.get(nomeParametro);
+    }
+    window.onload = async () => {
+      getUser(null, obterParametroURL("cpf"))
+    };
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
