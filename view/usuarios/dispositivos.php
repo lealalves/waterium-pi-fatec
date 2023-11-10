@@ -52,7 +52,7 @@
           <h1 class="h2 p-2">Usuários</h1>
         </div>
 
-        <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Procurar...">
+        <input class="form-control form-control-dark w-100" type="text" placeholder="Procurar" aria-label="Search">
 
         <div class="table-responsive">
           <table class="table table-striped table-sm">
@@ -118,12 +118,12 @@
       arr.map(item => {
         let linha = document.createElement("tr")
         linha.innerHTML = `
-          <td>${item.id_conta}</td>
+          <td>${item.conta}</td>
           <td>${item.nome}</td>
           <td>${item.cpf}</td>
           <td>${item.codigo_dispositivo}</td>
           <td>BAIRRO</td>
-          <td data-value="${item.id_conta}" onClick="deleteUser(event)">Excluir Usuário</td>
+          <td data-value="${item.cpf}" onClick="redirectPage(event)">Detalhes</td>
           `
         table.append(linha)
       })
@@ -133,6 +133,12 @@
       const id = e.target.dataset.value
       const res = await fetch(`http://localhost:80/waterium-pi-fatec/controller/usuarios/deletar.php?id=${id}`)
       console.log(await res.json());
+    }
+
+    const redirectPage = (e) => {
+      const cpf = e.target.dataset.value
+      const url = './graficos.php'
+      window.location.href = `${url}?cpf=${cpf}`;
     }
 
     window.onload = async () => {
