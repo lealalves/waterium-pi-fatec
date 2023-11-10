@@ -63,6 +63,7 @@
                 <th data-value="cpf" scope="col">CPF</th>
                 <th data-value="codigo_dispositivo" scope="col">ID Aparelho</th>
                 <th scope="col">Bairro</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody id="userList">
