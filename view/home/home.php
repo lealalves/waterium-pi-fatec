@@ -62,6 +62,7 @@
           </div>
         </div>
         <div class="d-flex flex-column justify-content-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+          <h1 class="h2">Gráficos de consumo por bairro</h1>
           <div class="d-flex justify-content-start align-items-center pt-3 pb-2 mb-3">
             <div class="card me-4 text-center mb-3" style="width: 12rem;">
               <div class="card-body">
@@ -76,7 +77,6 @@
               </div>
             </div>
           </div>
-          <h1 class="h2">Gráficos de consumo por bairro</h1>
           <div class="col-md-6 py-1">
             <div class="card">
               <div class="card-body">
