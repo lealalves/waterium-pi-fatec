@@ -251,7 +251,7 @@
         document.querySelector("#sucesso").style.display = "initial"
 
         setTimeout(() => {
-          document.location.reload()
+          document.location.href = './graficos.php'
         }, 2000)
       }
 
