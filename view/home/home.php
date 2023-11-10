@@ -61,19 +61,20 @@
             </button>
           </div>
         </div>
-        <div class="d-flex flex-column justify-content-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+        <div
+          class="d-flex flex-column justify-content-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
           <h1 class="h2">Gráficos de consumo por bairro</h1>
           <div class="d-flex justify-content-start align-items-center pt-3 pb-2 mb-3">
             <div class="card me-4 text-center mb-3" style="width: 12rem;">
               <div class="card-body">
                 <h5 class="card-title h6">Dispositivos</h5>
-                <p class="card-text h1">456</p>
+                <p id="countDevice" class="card-text h1"></p>
               </div>
             </div>
             <div class="card text-center mb-3" style="width: 12rem;">
               <div class="card-body">
                 <h5 class="card-title h6">Usuários</h5>
-                <p class="card-text h1">424</p>
+                <p id="countUser" class="card-text h1"></p>
               </div>
             </div>
           </div>
@@ -89,6 +90,24 @@
     </div>
   </div>
 
+  <script>
+    const getDispositivos = async () => {
+      const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/home/dispositivos.php")
+      const res = await req.json()
+
+      document.querySelector("#countDevice").innerHTML = res.length
+    }
+
+    const getUsuarios = async () => {
+      const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/home/usuarios.php")
+      const res = await req.json()
+
+      document.querySelector("#countUser").innerHTML = res.length
+    }
+
+    getDispositivos()
+    getUsuarios()
+  </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
