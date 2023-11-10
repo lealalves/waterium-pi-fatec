@@ -55,7 +55,7 @@
         <input class="form-control form-control-dark w-100" type="text" placeholder="Procurar" aria-label="Search">
 
         <div class="table-responsive">
-          <table class="table table-striped table-sm">
+          <table class="table table-striped table-sm text-center">
             <thead>
               <tr onclick="sortBy(event)">
                 <th data-value="id_conta" scope="col">ID</th>
@@ -117,13 +117,18 @@
 
       arr.map(item => {
         let linha = document.createElement("tr")
+        linha.style.verticalAlign = "middle"
         linha.innerHTML = `
           <td>${item.conta}</td>
           <td>${item.nome}</td>
           <td>${item.cpf}</td>
-          <td>${item.codigo_dispositivo}</td>
+          <td>${item.codigo_dispositivo != null ? item.codigo_dispositivo : "SEM DISPOSITIVO"}</td>
           <td>BAIRRO</td>
-          <td data-value="${item.cpf}" onClick="redirectPage(event)">Detalhes</td>
+          <td onClick="redirectPage(event)">
+            <button data-value="${item.cpf}" type="button" class="btn btn-secondary">
+              Detalhes
+            </button>
+          </td>
           `
         table.append(linha)
       })
