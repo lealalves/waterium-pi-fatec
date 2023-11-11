@@ -5,29 +5,31 @@ $conexao = novaConexao();
 
 $cpf = $_POST['cpf'];
 
-$firstSelect = "SELECT u.cpf, u.nome, d.* 
+$firstSelect = "SELECT * 
+                  FROM usuario
+                  WHERE cpf = $cpf";
+
+try {
+  $consulta = $conexao->query($firstSelect);
+  if ($consulta->rowCount() > 0) {
+    $result1 = $consulta->fetchAll(PDO::FETCH_ASSOC);
+
+    $secondSelect = "SELECT d.* 
                   FROM usuario u
                   JOIN dispositivo d 
                   ON u.id_conta = d.id_conta
                   WHERE cpf = $cpf";
 
-$secondSelect = "SELECT * 
-                  FROM usuario
-                  WHERE cpf = $cpf";
-
-try {
-  $result = $conexao->query($firstSelect);
-  if ($result->rowCount() > 0) {
-    $result = $result->fetchAll(PDO::FETCH_ASSOC);
-    echo json_encode($result);
-  } else {
-    $result = $conexao->query($secondSelect);
-    if ($result->rowCount() > 0) {
-      $result = $result->fetchAll(PDO::FETCH_ASSOC);
-      echo json_encode($result);
+    $consulta2 = $conexao->query($secondSelect);
+    if ($consulta2->rowCount() > 0) {
+      $result2 = $consulta2->fetchAll(PDO::FETCH_ASSOC);
+      echo json_encode($result1[0] + Array("dispositivos" => $result2));
     } else {
-      echo json_encode(array("error" => "CPF nao encontrado."));
+      echo json_encode($result1[0]);
     }
+
+  } else {
+    echo json_encode(array("error" => "CPF nao encontrado."));    
   }
 
 } catch (PDOException $e) {
