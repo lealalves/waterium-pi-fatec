@@ -18,6 +18,11 @@
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
   <style>
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+
     .bd-placeholder-img {
       font-size: 1.125rem;
       text-anchor: middle;
@@ -172,9 +177,12 @@
                   </div>
                 </div>
               </div>
+              <h5>Geolocalização do aparelho:</h5>
+              <div id="map"></div>
             </div>
           </div>
         </div>
+
 
       </main>
     </div>
@@ -182,6 +190,147 @@
   <script>
     const inputHiddenCpf = document.getElementsByName("cpfUser")
     const inputHiddenIdDispositivo = document.getElementsByName("idDispositivo")
+    let map
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        disableDefaultUI: true,
+        zoom: 16,
+        styles:
+          [
+            {
+              "elementType": "geometry",
+              "stylers": [
+                { "color": "#242f3e" }
+              ]
+            },
+            {
+              "elementType": "labels.text.stroke",
+              "stylers": [
+                { "color": "#242f3e" }
+              ]
+            },
+            {
+              "elementType": "labels.text.fill",
+              "stylers": [
+                { "color": "#746855" }
+              ]
+            },
+            {
+              "featureType": "administrative.locality",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                { "color": "#d59563" }
+              ]
+            },
+            {
+              "featureType": "poi",
+              "elementType": "labels",
+              "stylers": [{ "visibility": "off" }]
+            },
+            {
+              "featureType": "poi",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                { "color": "#d59563" }
+              ]
+            },
+            {
+              "featureType": "poi.park",
+              "elementType": "geometry",
+              "stylers": [
+                { "color": "#263c3f" }
+              ]
+            },
+            {
+              "featureType": "poi.park",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                { "color": "#6b9a76" }
+              ]
+            },
+            {
+              "featureType": "road",
+              "elementType": "geometry",
+              "stylers": [
+                { "color": "#38414e" }
+              ]
+            },
+            {
+              "featureType": "road",
+              "elementType": "geometry.stroke",
+              "stylers": [
+                { "color": "#212a37" }
+              ]
+            },
+            {
+              "featureType": "road",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                { "color": "#9ca5b3" }
+              ]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "labels",
+              "stylers": [
+                { "visibility": "off" }
+              ]
+            },
+            {
+              "featureType": "transit",
+              "elementType": "labels",
+              "stylers": [
+                { "visibility": "off" }
+              ]
+            },
+            {
+              "featureType": "water",
+              "elementType": "geometry",
+              "stylers": [
+                { "color": "#17263c" }
+              ]
+            },
+            {
+              "featureType": "water",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                { "color": "#515c6d" }
+              ]
+            },
+            {
+              "featureType": "water",
+              "elementType": "labels.text.stroke",
+              "stylers": [
+                { "color": "#17263c" }
+              ]
+            }
+          ]
+
+      });
+
+    }
+
+    const setMarker = (latLng, map, deviceCod) => {
+      const marker = new google.maps.Marker({
+        position: latLng,
+        map: map,
+        title: 'Meu Marcador',
+        icon: {
+          url: '../../imgs/marker_icon.png',
+          scaledSize: new google.maps.Size(40, 40)
+        }
+      });
+
+      let infowindow = new google.maps.InfoWindow({
+        content: `ID: ${deviceCod}`
+      });
+
+      // Abre automaticamente a InfoWindow quando o mapa é carregado
+      infowindow.open(map, marker);
+
+      // Centraliza o mapa no marcador após colocá-lo
+      map.setCenter(latLng);
+    }
 
     const getUser = async (e = null, query = null) => {
       const cpf = query != null ? query : document.querySelector("#searchCpf").value
@@ -223,16 +372,20 @@
         inputHiddenCpf.value = item.cpf
         txtUserName.innerHTML = item.nome
 
-        if(item.codigo_dispositivo){
-          txtIdDispositivo.innerHTML = item.codigo_dispositivo
+        if (item.codigo_dispositivo) {
+          let latLng = { lat: Number(item.latitude), lng: Number(item.longitude) }
+          let deviceCod = item.codigo_dispositivo
+          txtIdDispositivo.innerHTML = deviceCod
           txtLatitude.innerHTML = item.latitude
           txtLongitude.innerHTML = item.longitude
-  
-          txtDeviceSpan.innerHTML = item.codigo_dispositivo
-          inputHiddenIdDispositivo.value = item.codigo_dispositivo
+
+          txtDeviceSpan.innerHTML = deviceCod
+          inputHiddenIdDispositivo.value = deviceCod
 
           document.querySelector("#deviceInfo").style.display = "initial"
           document.querySelector("#deviceInProfile").style.display = "initial"
+
+          setMarker(latLng, map, deviceCod)
         }
       })
 
@@ -260,7 +413,7 @@
     const deleteDevice = async () => {
       const codigo_dispositivo = inputHiddenIdDispositivo.value
       const req = await fetch(`http://localhost:80/waterium-pi-fatec/controller/dispositivos/deletar.php?codigo_dispositivo=${codigo_dispositivo}`)
-      
+
       const res = await req.json()
       if (!res.mensagem) {
         console.log(res);
@@ -283,6 +436,9 @@
     };
   </script>
 
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQwG7kSVo3XFVSaAt3tfLSt8fAwuM0XvY&callback=initMap">
+    </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
     integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
