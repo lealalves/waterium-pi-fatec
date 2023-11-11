@@ -18,6 +18,11 @@
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
   <style>
+    #map {
+      height: 500px;
+      width: 60%;
+    }
+
     .bd-placeholder-img {
       font-size: 1.125rem;
       text-anchor: middle;
@@ -63,7 +68,6 @@
         </div>
         <div
           class="d-flex flex-column justify-content-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-          <h1 class="h2">Gráficos de consumo por bairro</h1>
           <div class="d-flex justify-content-start align-items-center pt-3 pb-2 mb-3">
             <div class="card me-4 text-center mb-3" style="width: 12rem;">
               <div class="card-body">
@@ -78,7 +82,10 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6 py-1">
+          <h1 class="h2">Mapa dos bairros</h1>
+          <div id="map"></div>
+          <h1 class="h2 mt-3">Gráficos de consumo por bairro</h1>
+          <div class="col-md-6 py-1 mb-5">
             <div class="card">
               <div class="card-body">
                 <canvas id="chBar"></canvas>
@@ -91,6 +98,72 @@
   </div>
 
   <script>
+    let colorsMap = [
+      ['#3498db', '#2c3e50'],
+      ['#e74c3c', '#c0392b'],
+      ['#2ecc71', '#27ae60'],
+      ['#f39c12', '#d35400'],
+      ['#1abc9c', '#16a085'],
+      ['#9b59b6', '#8e44ad'],
+      ['#34495e', '#2c3e50']
+    ];
+
+    let circlesMap = []
+    let infoWindow
+    function initMap() {
+      let map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -24.4942, lng: -47.8432 },
+        disableDefaultUI: true,
+        zoom: 14,
+        styles:
+          [
+            {
+              featureType: "poi",
+              elementType: "labels",
+              stylers: [{ visibility: "off" }]
+            }
+          ]
+      });
+
+      let baseCircle = {
+        map: map,
+        radius: 700, // Raio em metros (aqui, 2000 metros ou 2 km)
+        strokeOpacity: 0.8, // Opacidade da borda
+        strokeWeight: 2, // Largura da borda
+        fillOpacity: 0.35  // Opacidade do preenchimento
+      }
+
+      addCircle(-24.509219, -47.828715, colorsMap[0], baseCircle, "13")
+      addCircle(-24.519786, -47.823556, colorsMap[1], baseCircle, "12")
+      addCircle(-24.505339, -47.871539, colorsMap[2], baseCircle, "120")
+
+      circlesMap.map(circle => {
+        google.maps.event.addListener(circle, 'click', function (event) {
+          if (!infoWindow) {
+            infoWindow = new google.maps.InfoWindow({
+              content: 'Dispositivos: ' + circle.get("devices")
+            });
+          }
+
+          infoWindow.setPosition(event.latLng);
+          infoWindow.open(map, circle);
+        });
+      })
+    }
+
+    const addCircle = (lat, lng, colors, baseCircle, devices) => {
+      const circle = new google.maps.Circle({
+        center: { lat: lat, lng: lng },
+        strokeColor: colors[0],
+        fillColor: colors[1],
+        ...baseCircle
+      });
+
+      circle.set("devices", devices)
+
+      circlesMap.push(circle)
+    }
+
     const getDispositivos = async () => {
       const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/home/dispositivos.php")
       const res = await req.json()
@@ -105,12 +178,17 @@
       document.querySelector("#countUser").innerHTML = res.length
     }
 
-    getDispositivos()
-    getUsuarios()
+    window.onload = async () => {
+      getDispositivos()
+      getUsuarios()
+    }
+
   </script>
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQwG7kSVo3XFVSaAt3tfLSt8fAwuM0XvY&callback=initMap">
+    </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
     integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
     crossorigin="anonymous"></script>
