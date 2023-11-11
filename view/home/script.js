@@ -1,29 +1,39 @@
 feather.replace({ 'aria-hidden': 'true' })
 
 var colors = ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d'];
-  var chBar = document.getElementById("chBar"); 
-  new Chart(chBar, {
+var chBar = document.getElementById("chBar");
+new Chart(chBar, {
   type: 'bar',
   data: {
-    labels: ["Vutupoca", "Jardim São Paulo", "Jardim Brasil"],
+    labels: ["Jardim Ipanema", "Jardim São Paulo", "Jardim Brasil"],
     datasets: [
       {
         label: "ph",
-        backgroundColor: "#3e95cd",
-        data: [2,4,6]
+        backgroundColor: colors[0],
+        data: [7.50, 6, 4.20]
+      },
+      {
+        label: "turbidez",
+        backgroundColor: colors[1],
+        data: [1.20, 2.3, 1.90]
+      },
+      {
+        label: "fluoreto",
+        backgroundColor: colors[2],
+        data: [0.03, 0.05, 0.09]
       },
       {
         label: "cloro (ppm)",
-        backgroundColor: "#8e5ea2",
-        data: [4,3,5]
+        backgroundColor: colors[5],
+        data: [0.80, 0.50, 0.30]
       }
     ]
   },
-    options: {
-      title: {
-        display: true,
-        text: "média de parâmetros de caixas d'água mês de setembro"
-      },
+  options: {
+    title: {
+      display: true,
+      text: "média de parâmetros de caixas d'água mês de setembro"
+    },
     legend: {
       display: true
     },
@@ -31,12 +41,12 @@ var colors = ['#007bff', '#28a745', '#333333', '#c3e6cb', '#dc3545', '#6c757d'];
       yAxes: [{
         ticks: {
           beginAtZero: true
-      }
+        }
       }],
-      xAxes: [{        
+      xAxes: [{
         barPercentage: 0.4,
         categoryPercentage: 0.5
       }]
     }
   }
-  });
+});
