@@ -18,9 +18,9 @@
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
   <style>
-    #map {
-      height: 500px;
-      width: 60%;
+    .map-container {
+      height: 30em;
+      width: 25em;
     }
 
     .bd-placeholder-img {
@@ -34,6 +34,11 @@
     @media (min-width: 768px) {
       .bd-placeholder-img-lg {
         font-size: 3.5rem;
+      }
+
+      .map-container {
+        height: 50em;
+        width: 60em;
       }
     }
   </style>
@@ -69,13 +74,13 @@
         <div
           class="d-flex flex-column justify-content-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
           <div class="d-flex justify-content-start align-items-center pt-3 pb-2 mb-3">
-            <div class="card me-4 text-center mb-3" style="width: 12rem;">
+            <div class="card me-4 text-center mb-3">
               <div class="card-body">
                 <h5 class="card-title h6">Dispositivos</h5>
                 <p id="countDevice" class="card-text h1"></p>
               </div>
             </div>
-            <div class="card text-center mb-3" style="width: 12rem;">
+            <div class="card text-center mb-3">
               <div class="card-body">
                 <h5 class="card-title h6">Usuários</h5>
                 <p id="countUser" class="card-text h1"></p>
@@ -83,7 +88,11 @@
             </div>
           </div>
           <h1 class="h2">Mapa dos bairros</h1>
-          <div id="map"></div>
+          <div class="row">
+            <div class="col">
+              <div id="map" class="map-container"></div>
+            </div>
+          </div>
           <h1 class="h2 mt-3">Gráficos de consumo por bairro</h1>
           <div class="col-md-6 py-1 mb-5">
             <div class="card">
