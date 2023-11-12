@@ -59,10 +59,9 @@
           <h1 class="h2 p-2">Detalhes Usuários </h1>
         </div>
 
-        <div
-          class="d-flex flex-column justify-content-center flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-          <div class="d-flex w-50 justify-content-center mb-5">
-            <input id="searchCpf" class="form-control w-50 me-5" type="text" placeholder="Pesquisar por CPF"
+        <div class="d-flex flex-column justify-content-center flex-wrap flex-md-nowrap align-items-center mb-3">
+          <div class="d-flex w-100 justify-content-center mb-5">
+            <input id="searchCpf" class="form-control me-5" type="text" placeholder="Pesquisar por CPF"
               aria-label="Procurar">
             <button onclick="getUser()" type="button" class="btn btn-primary">Buscar</button>
           </div>
@@ -93,46 +92,45 @@
                   </div>
                 </div>
                 <hr>
-                <div id="deviceInProfile" style="display: none">
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">ID Dispositivo</p>
-                    </div>
-                    <div class="col-sm-9">
-                      <p id="txtIdDispositivo" class="text-muted mb-0"></p>
-                    </div>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">Rua</p>
                   </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Latitude</p>
-                    </div>
-                    <div class="col-sm-9">
-                      <p id="txtLatitude" class="text-muted mb-0"></p>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <p class="mb-0">Longitude</p>
-                    </div>
-                    <div class="col-sm-9">
-                      <p id="txtLongitude" class="text-muted mb-0"></p>
-                    </div>
+                  <div class="col-sm-9">
+                    <p id="txtRua" class="text-muted mb-0"></p>
                   </div>
                 </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">Bairro</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <p id="txtBairro" class="text-muted mb-0"></p>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">Cidade</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <p id="txtCidade" class="text-muted mb-0"></p>
+                  </div>
+                </div>
+                <hr>
               </div>
-              <div class="d-flex align-items-center justify-content-center mt-5 mb-5">
-                <div class="card text-center m-2" style="width: 12rem; height: 7rem">
+              <div class="d-flex align-items-center justify-content-center mt-3 mb-5">
+                <div class="card text-center m-2 p-3">
                   <div class="card-body">
                     <h5 class="card-title h6">Qualidade</h5>
                     <p class="card-text h1">?</p>
                   </div>
                 </div>
-                <div class="card text-center m-2" style="width: 12rem; height: 7rem">
+                <div class="card text-center m-2 p-3">
                   <div class="card-body">
                     <h5 class="card-title h6">Dispositivos</h5>
-                    <p class="card-text h1">?</p>
+                    <p id="deviceCount" class="card-text h1">0</p>
                   </div>
                 </div>
               </div>
@@ -140,9 +138,15 @@
                 Usuário</button>
             </div>
             <div id="deviceInfo" style="display: none;">
-              <div class="d-flex justify-content-between align-items-center text-center mb-2">
-                <h5>Informações do dispositivo: <span id="idDevice"></span></h5>
-                <button type="button" class="btn btn-primary" onclick="deleteDevice()">Apagar Dispositivo</button>
+              <div class="d-flex justify-content-between align-items-center text-center mb-2 w-100">
+                <h5>Informações do dispositivo:</h5>
+                <div class="col-sm-6 ms-2">
+                  <select class="form-control" id="selectDevice" onchange="changeDevice(event)">
+                  </select>
+                </div>
+                <div class="col">
+                  <button type="button" class="btn btn-primary" onclick="deleteDevice()">Apagar Dispositivo</button>
+                </div>
               </div>
               <div class="row mb-5">
                 <div class="col-md-6 mt-2">
@@ -182,134 +186,38 @@
             </div>
           </div>
         </div>
-
-
       </main>
     </div>
   </div>
-  <script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
+    integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
+    integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
+    crossorigin="anonymous"></script>
+  <script src="script.js"></script>
+  <script async defer>
     const inputHiddenCpf = document.getElementsByName("cpfUser")
     const inputHiddenIdDispositivo = document.getElementsByName("idDispositivo")
+    const txtUserName = document.querySelector("#txtUserName")
+    const txtCpf = document.querySelector("#txtCpf")
+
+    const deviceInfoElement = document.querySelector("#deviceInfo")
+    const profileInfoElement = document.querySelector("#userProfile")
+    const selectDevice = document.querySelector("#selectDevice")
     let map
+    let devicesList
+
     function initMap() {
       map = new google.maps.Map(document.getElementById('map'), {
         disableDefaultUI: true,
         zoom: 16,
-        styles:
-          [
-            {
-              "elementType": "geometry",
-              "stylers": [
-                { "color": "#242f3e" }
-              ]
-            },
-            {
-              "elementType": "labels.text.stroke",
-              "stylers": [
-                { "color": "#242f3e" }
-              ]
-            },
-            {
-              "elementType": "labels.text.fill",
-              "stylers": [
-                { "color": "#746855" }
-              ]
-            },
-            {
-              "featureType": "administrative.locality",
-              "elementType": "labels.text.fill",
-              "stylers": [
-                { "color": "#d59563" }
-              ]
-            },
-            {
-              "featureType": "poi",
-              "elementType": "labels",
-              "stylers": [{ "visibility": "off" }]
-            },
-            {
-              "featureType": "poi",
-              "elementType": "labels.text.fill",
-              "stylers": [
-                { "color": "#d59563" }
-              ]
-            },
-            {
-              "featureType": "poi.park",
-              "elementType": "geometry",
-              "stylers": [
-                { "color": "#263c3f" }
-              ]
-            },
-            {
-              "featureType": "poi.park",
-              "elementType": "labels.text.fill",
-              "stylers": [
-                { "color": "#6b9a76" }
-              ]
-            },
-            {
-              "featureType": "road",
-              "elementType": "geometry",
-              "stylers": [
-                { "color": "#38414e" }
-              ]
-            },
-            {
-              "featureType": "road",
-              "elementType": "geometry.stroke",
-              "stylers": [
-                { "color": "#212a37" }
-              ]
-            },
-            {
-              "featureType": "road",
-              "elementType": "labels.text.fill",
-              "stylers": [
-                { "color": "#9ca5b3" }
-              ]
-            },
-            {
-              "featureType": "road.highway",
-              "elementType": "labels",
-              "stylers": [
-                { "visibility": "off" }
-              ]
-            },
-            {
-              "featureType": "transit",
-              "elementType": "labels",
-              "stylers": [
-                { "visibility": "off" }
-              ]
-            },
-            {
-              "featureType": "water",
-              "elementType": "geometry",
-              "stylers": [
-                { "color": "#17263c" }
-              ]
-            },
-            {
-              "featureType": "water",
-              "elementType": "labels.text.fill",
-              "stylers": [
-                { "color": "#515c6d" }
-              ]
-            },
-            {
-              "featureType": "water",
-              "elementType": "labels.text.stroke",
-              "stylers": [
-                { "color": "#17263c" }
-              ]
-            }
-          ]
-
+        styles: mapStyle
       });
 
     }
-
+    
     const setMarker = (latLng, map, deviceCod) => {
       const marker = new google.maps.Marker({
         position: latLng,
@@ -317,7 +225,7 @@
         title: 'Meu Marcador',
         icon: {
           url: '../../imgs/marker_icon.png',
-          scaledSize: new google.maps.Size(40, 40)
+          scaledSize: new google.maps.Size(30, 30)
         }
       });
 
@@ -325,16 +233,16 @@
         content: `ID: ${deviceCod}`
       });
 
-      // Abre automaticamente a InfoWindow quando o mapa é carregado
       infowindow.open(map, marker);
-
-      // Centraliza o mapa no marcador após colocá-lo
       map.setCenter(latLng);
     }
 
-    const getUser = async (e = null, query = null) => {
-      const cpf = query != null ? query : document.querySelector("#searchCpf").value
+    const getUser = async (e = null, query = null) => {    
+      while (selectDevice.firstChild) {
+          selectDevice.removeChild(selectDevice.firstChild);
+        }
 
+      const cpf = query != null ? query : document.querySelector("#searchCpf").value
       if (cpf) {
         let formData = new FormData();
         formData.append('cpf', cpf);
@@ -350,47 +258,62 @@
           document.querySelector("#erro").innerHTML = res.error
           document.querySelector("#erro").style.display = "initial"
         } else {
-          document.querySelector("#userProfile").style = "initial"
           setUser(res)
+          document.querySelector("#userProfile").style = "initial"
         }
       }
     }
 
     const setUser = (arr) => {
-      console.log(arr);
+      txtCpf.innerHTML = arr.cpf
+      inputHiddenCpf.value = arr.cpf
+      txtUserName.innerHTML = arr.nome
 
-      const txtUserName = document.querySelector("#txtUserName")
-      const txtCpf = document.querySelector("#txtCpf")
-      const txtIdDispositivo = document.querySelector("#txtIdDispositivo")
-      const txtLatitude = document.querySelector("#txtLatitude")
-      const txtLongitude = document.querySelector("#txtLongitude")
-      const txtDeviceSpan = document.querySelector("#idDevice")
-
-
-      arr.map(item => {
-        txtCpf.innerHTML = item.cpf
-        inputHiddenCpf.value = item.cpf
-        txtUserName.innerHTML = item.nome
-
-        if (item.codigo_dispositivo) {
-          let latLng = { lat: Number(item.latitude), lng: Number(item.longitude) }
-          let deviceCod = item.codigo_dispositivo
-          txtIdDispositivo.innerHTML = deviceCod
-          txtLatitude.innerHTML = item.latitude
-          txtLongitude.innerHTML = item.longitude
-
-          txtDeviceSpan.innerHTML = deviceCod
-          inputHiddenIdDispositivo.value = deviceCod
-
-          document.querySelector("#deviceInfo").style.display = "initial"
-          document.querySelector("#deviceInProfile").style.display = "initial"
-
-          setMarker(latLng, map, deviceCod)
-        }
-      })
+      if (arr.dispositivos) {
+        document.querySelector("#deviceCount").innerHTML = arr.dispositivos.length
+        setDeviceList(arr.dispositivos)
+      }
 
     }
 
+    const setDeviceList = (devices) => {
+      devicesList = devices
+      let deviceCod
+      let latLng
+      devices.map(item => {
+        const optionSelect = document.createElement("option")
+
+        deviceCod = item.codigo_dispositivo
+        latLng = { lat: Number(item.latitude), lng: Number(item.longitude) }
+        optionSelect.innerHTML = deviceCod
+        optionSelect.value = deviceCod
+        selectDevice.appendChild(optionSelect)
+        document.querySelector("#deviceInfo").style.display = "initial"
+      })
+      
+      selectDevice.value = deviceCod
+      setDevice(deviceCod, latLng)
+    }
+
+    const setDevice = (dcod, coords) => {
+      let latLng = { lat: Number(coords.lat), lng: Number(coords.lng) }
+      inputHiddenIdDispositivo.value = dcod
+      deviceLocInfos(coords.lat, coords.lng)
+      setMarker(latLng, map, dcod)
+      generateCharts()
+    }
+
+    const changeDevice = (event) => {
+      let dcod = event.target.value
+
+      devicesList.map(item => {
+        if (item.codigo_dispositivo == dcod) {
+          let latLng = { lat: Number(item.latitude), lng: Number(item.longitude) }
+
+          setDevice(dcod, latLng)
+        }
+      })
+    }
 
     const deleteUser = async () => {
       const cpf = inputHiddenCpf.value
@@ -427,26 +350,40 @@
       }
     }
 
+    function deviceLocInfos(lat, lng) {
+      var latlng = new google.maps.LatLng(Number(lat), Number(lng));
+      var geocoder = new google.maps.Geocoder();
+
+      geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          if (results[1]) {
+            let infos = results[1].address_components
+
+            document.querySelector("#txtRua").innerHTML = `${infos[1].long_name}, ${infos[0].long_name}`
+            document.querySelector("#txtBairro").innerHTML = infos[2].long_name
+            document.querySelector("#txtCidade").innerHTML = infos[3].long_name
+
+          } else {
+            document.getElementById('result').innerHTML = 'Nenhum resultado encontrado';
+          }
+        } else {
+          console.log(status);
+        }
+      });
+    }
+
     const obterParametroURL = (nomeParametro) => {
       var urlSearchParams = new URLSearchParams(window.location.search);
       return urlSearchParams.get(nomeParametro);
     }
     window.onload = async () => {
       getUser(null, obterParametroURL("cpf"))
-    };
+    };    
+    
   </script>
-
-  <script async
+    <script async
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQwG7kSVo3XFVSaAt3tfLSt8fAwuM0XvY&callback=initMap">
     </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
-    integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
-    integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
-    crossorigin="anonymous"></script>
-  <script src="script.js"></script>
 </body>
 
 </html>
