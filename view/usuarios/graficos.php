@@ -53,6 +53,7 @@
 
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <input type="hidden" name="cpfUser">
+        <input type="hidden" name="idUser">
         <input type="hidden" name="idDispositivo">
         <div
           class="d-flex justify-content-start flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -97,7 +98,7 @@
                     <p class="mb-0">CPF</p>
                   </div>
                   <div class="col-sm-9">
-                    <p id="txtCpf" class="text-muted mb-0"></p>
+                    <p id="txtCpf" class="text-muted mb-0">SEM INFORMAÇÕES</p>
                   </div>
                 </div>
                 <hr>
@@ -106,7 +107,7 @@
                     <p class="mb-0">Rua</p>
                   </div>
                   <div class="col-sm-9">
-                    <p id="txtRua" class="text-muted mb-0"></p>
+                    <p id="txtRua" class="text-muted mb-0">SEM INFORMAÇÕES</p>
                   </div>
                 </div>
                 <hr>
@@ -115,7 +116,7 @@
                     <p class="mb-0">Bairro</p>
                   </div>
                   <div class="col-sm-9">
-                    <p id="txtBairro" class="text-muted mb-0"></p>
+                    <p id="txtBairro" class="text-muted mb-0">SEM INFORMAÇÕES</p>
                   </div>
                 </div>
                 <hr>
@@ -124,37 +125,40 @@
                     <p class="mb-0">Cidade</p>
                   </div>
                   <div class="col-sm-9">
-                    <p id="txtCidade" class="text-muted mb-0"></p>
+                    <p id="txtCidade" class="text-muted mb-0">SEM INFORMAÇÕES</p>
                   </div>
                 </div>
                 <hr>
               </div>
-              <div class="d-flex align-items-center justify-content-center mt-3 mb-5">
+              <div class="d-flex align-items-center flex-column justify-content-center mt-3 mb-5">
                 <div class="card text-center m-2 p-3">
                   <div class="card-body">
                     <h5 class="card-title h6">Dispositivos</h5>
                     <p id="deviceCount" class="card-text h1">0</p>
                   </div>
                 </div>
+                <button type="button" class="btn btn-primary m-auto w-25" id="btnGenerateCode"
+                  onclick="generateDeviceCode()">Gerar Código
+                </button>
               </div>
               <button type="button" class="btn btn-primary m-auto mb-5 w-50" onClick="deleteUser()">Deletar
                 Usuário
               </button>
             </div>
-            <div id="deviceInfo" style="display: none;">
-              <div class="d-flex justify-content-between align-items-center text-center mb-2 w-100">
-                <h5>Informações do dispositivo:</h5>
-                <div class="col-sm-6 ms-2">
-                  <select class="form-control" id="selectDevice" onchange="changeDevice(event)">
-                  </select>
-                </div>
-                <div class="col">
-                  <button type="button" class="btn btn-primary" onclick="deleteDevice()">Apagar</button>
-                </div>
-                <div class="col">
-                  <button type="button" class="btn btn-primary" onclick="relatorioPagina()">Relatório</button>
-                </div>
+            <div class="d-flex justify-content-between align-items-center text-center mb-2 w-100">
+              <h5>Informações do dispositivo:</h5>
+              <div class="col-sm-6 ms-2">
+                <select class="form-control" id="selectDevice" onchange="changeDevice(event)">
+                </select>
               </div>
+              <div class="col">
+                <button type="button" class="btn btn-primary" onclick="deleteDevice()">Apagar</button>
+              </div>
+              <div class="col">
+                <button type="button" class="btn btn-primary" onclick="relatorioPagina()" id="btnRelatorio">Relatório</button>
+              </div>
+            </div>
+            <div id="deviceInfo" style="display: none;">
               <div class="row mb-5">
                 <div class="col-md-6 mt-2">
                   <div class="card">
@@ -171,7 +175,6 @@
                   </div>
                 </div>
               </div>
-
               <div class="row mb-5">
                 <div class="col-md-6 mt-2">
                   <div class="card">
@@ -207,6 +210,7 @@
   <script async defer>
     const inputHiddenCpf = document.getElementsByName("cpfUser")
     const inputHiddenIdDispositivo = document.getElementsByName("idDispositivo")
+    const inputHiddenIdUser = document.getElementsByName("idUser")
     const txtUserName = document.querySelector("#txtUserName")
     const txtCpf = document.querySelector("#txtCpf")
 
@@ -215,6 +219,8 @@
     const selectDevice = document.querySelector("#selectDevice")
     let map
     let devicesList
+    let haveData = false
+
 
     function initMap() {
       map = new google.maps.Map(document.getElementById('map'), {
@@ -242,6 +248,43 @@
 
       infowindow.open(map, marker);
       map.setCenter(latLng);
+    }
+
+    const generateDeviceCode = () => {
+      let maxLength = 10;
+
+      let randomCode = '';
+      for (let i = 0; i < maxLength; i++) {
+        randomCode += Math.floor(Math.random() * 10);
+      }
+      console.log(inputHiddenIdDispositivo.value);
+      inputHiddenIdDispositivo.value = randomCode
+      console.log(inputHiddenIdDispositivo.value);
+
+      registerDevice()
+    }
+
+    const registerDevice = async () => {
+      let formData = new FormData();
+      formData.append('dcod', inputHiddenIdDispositivo.value);
+      formData.append('userId', inputHiddenIdUser.value);
+      const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/dispositivos/cadastrar.php", {
+        method: "POST",
+        body: formData
+      })
+
+      const res = await req.json()
+      if (res.mensagem) {
+        document.querySelector("#sucesso").innerHTML = res.mensagem
+        document.querySelector("#sucesso").style.display = "initial"
+        setTimeout(() => {
+          location.reload()
+        }, 1000)
+      } else {
+        document.querySelector("#erro").innerHTML = "Erro ao gerar código de dispositivo."
+        document.querySelector("#erro").style.display = "initial"
+      }
+
     }
 
     const getUser = async (e = null, query = null) => {
@@ -274,6 +317,7 @@
     const setUser = (arr) => {
       txtCpf.innerHTML = arr.cpf
       inputHiddenCpf.value = arr.cpf
+      inputHiddenIdUser.value = arr.id_conta
       txtUserName.innerHTML = arr.nome
 
       if (arr.dispositivos) {
@@ -289,40 +333,69 @@
       let latLng
       devices.map(item => {
         const optionSelect = document.createElement("option")
-
         deviceCod = item.codigo_dispositivo
-        latLng = { lat: Number(item.latitude), lng: Number(item.longitude) }
+
+        if (item.cloro != null) {
+          latLng = { lat: Number(item.latitude), lng: Number(item.longitude) }
+          inputHiddenIdDispositivo.value = deviceCod
+          selectDevice.value = deviceCod
+
+          haveData = true
+        }
+
+
+        if (!haveData) optionSelect.selected = true
+
         optionSelect.innerHTML = deviceCod
         optionSelect.value = deviceCod
         selectDevice.appendChild(optionSelect)
-        document.querySelector("#deviceInfo").style.display = "initial"
+
       })
 
-      selectDevice.value = deviceCod
-      setDevice(deviceCod, latLng)
+      setDevice(inputHiddenIdDispositivo.value != null ? inputHiddenIdDispositivo.value : deviceCod, latLng, haveData)
     }
 
-    const setDevice = (dcod, coords) => {
-      let latLng = { lat: Number(coords.lat), lng: Number(coords.lng) }
-      inputHiddenIdDispositivo.value = dcod
-      deviceLocInfos(coords.lat, coords.lng)
-      setMarker(latLng, map, dcod)
-      generateCharts()
+    const setDevice = (dcod, coords, haveData) => {
+      if (haveData) {
+        document.querySelector("#deviceInfo").style.display = "initial"
+        let latLng = { lat: Number(coords.lat), lng: Number(coords.lng) }
+
+        deviceLocInfos(coords.lat, coords.lng)
+        setMarker(latLng, map, dcod)
+        generateCharts()
+      } else {
+        document.querySelector("#btnRelatorio").disabled = true
+        document.querySelector("#deviceInfo").style.display = "none"
+        document.querySelector("#erro").innerHTML = `Dispositivo ID ${dcod} sem dados.`
+        document.querySelector("#erro").style.display = "initial"
+      }
     }
 
     const changeDevice = (event) => {
+      document.querySelector("#erro").style.display = "none"
       let dcod = event.target.value
+      inputHiddenIdDispositivo.value = dcod
 
       devicesList.map(item => {
         if (item.codigo_dispositivo == dcod) {
-          let latLng = { lat: Number(item.latitude), lng: Number(item.longitude) }
-
-          setDevice(dcod, latLng)
+          if (item.cloro != null) {
+            document.querySelector("#btnRelatorio").disabled = false
+            haveData = true
+            let latLng = { lat: Number(item.latitude), lng: Number(item.longitude) }
+            setDevice(dcod, latLng, haveData)
+          } else {
+            document.querySelector("#btnRelatorio").disabled = true
+            haveData = false
+            document.querySelector("#deviceInfo").style.display = "none"
+            document.querySelector("#erro").innerHTML = `Dispositivo ID ${inputHiddenIdDispositivo.value} sem dados.`
+            document.querySelector("#erro").style.display = "initial"
+          }
         }
       })
     }
 
     const deleteUser = async () => {
+      await deleteDevice()
       const cpf = inputHiddenCpf.value
       const req = await fetch(`http://localhost:80/waterium-pi-fatec/controller/usuarios/deletar.php?cpf=${cpf}`)
       const res = await req.json()
@@ -358,8 +431,8 @@
     }
 
     function deviceLocInfos(lat, lng) {
-      var latlng = new google.maps.LatLng(Number(lat), Number(lng));
-      var geocoder = new google.maps.Geocoder();
+      let latlng = new google.maps.LatLng(Number(lat), Number(lng));
+      let geocoder = new google.maps.Geocoder();
 
       geocoder.geocode({ 'latLng': latlng }, function (results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
@@ -387,30 +460,28 @@
     }
 
     const obterParametroURL = (nomeParametro) => {
-      var urlSearchParams = new URLSearchParams(window.location.search);
+      let urlSearchParams = new URLSearchParams(window.location.search);
       return urlSearchParams.get(nomeParametro);
     }
 
     const toggleEdit = () => {
-      var txtUserName = document.getElementById('txtUserName');
-      var txtUserNameEdit = document.getElementById('txtUserNameEdit');
-      var btnSave = document.getElementById('btnSave');
+      let txtUserName = document.getElementById('txtUserName');
+      let txtUserNameEdit = document.getElementById('txtUserNameEdit');
+      let btnSave = document.getElementById('btnSave');
 
       txtUserName.style.display = txtUserName.style.display === 'none' ? 'block' : 'none';
       txtUserNameEdit.style.display = txtUserNameEdit.style.display === 'none' ? 'block' : 'none';
       btnSave.style.display = btnSave.style.display === 'none' ? 'block' : 'none';
 
-      // Preencher o campo de edição com o texto atual
       txtUserNameEdit.value = txtUserName.textContent.trim();
     }
 
     const saveChanges = async () => {
-      var txtUserName = document.getElementById('txtUserName');
-      var txtUserNameEdit = document.getElementById('txtUserNameEdit');
-      var btnSave = document.getElementById('btnSave');
+      let txtUserName = document.getElementById('txtUserName');
+      let txtUserNameEdit = document.getElementById('txtUserNameEdit');
+      let btnSave = document.getElementById('btnSave');
 
-      // Implemente a lógica para salvar as alterações aqui
-      var editedName = txtUserNameEdit.value;
+      let editedName = txtUserNameEdit.value;
 
       let formData = new FormData();
       formData.append('cpf', inputHiddenCpf.value);
@@ -420,11 +491,18 @@
         body: formData
       })
 
-      console.log(await req.json());
-      // Substituir o texto original pelo nome editado
+      const res = await req.json()
+      if (res.mensagem) {
+        document.querySelector("#sucesso").innerHTML = res.mensagem
+        document.querySelector("#sucesso").style.display = "initial"
+
+      } else {
+        document.querySelector("#erro").innerHTML = "Erro ao atualizar nome do usuário."
+        document.querySelector("#erro").style.display = "initial"
+      }
+
       txtUserName.textContent = editedName;
 
-      // Exibir o texto e ocultar o campo de input e o botão Salvar
       txtUserName.style.display = 'block';
       txtUserNameEdit.style.display = 'none';
       btnSave.style.display = 'none';
