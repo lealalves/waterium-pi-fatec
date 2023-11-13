@@ -4,7 +4,6 @@ require_once("../conexao.php");
 $dcod = $_POST["dcod"];
 $userId = $_POST["userId"];
 
-echo $dcod;
 $conexao = novaConexao();
 
 try {
@@ -18,7 +17,7 @@ try {
   if ($cadastrarQuery->rowCount() > 0) {
     echo json_encode(array("mensagem" => "Dispositivo cadastrado com sucesso."));
   } else {
-    echo json_encode("Erro cadastrar dispositivo.");
+    echo json_encode(array("erro" => "Erro cadastrar dispositivo."));
   }
 
 } catch (PDOException $e) {
