@@ -94,29 +94,38 @@
       let cpf = document.querySelector("#cpf").value
       let nome = document.querySelector("#nome").value
 
-      if(cpf.length == 14 && nome.length > 4){
+      if (cpf.length == 14 && nome.length > 4) {
         formData.append("nome", nome)
         formData.append("cpf", cpf)
-  
+
         const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/usuarios/cadastrar.php", {
           method: "POST",
           body: formData
         })
-  
+
         const res = await req.json()
-  
+
         if (res == "Usuario cadastrado com sucesso.") {
           successComponent.innerHTML = res
           successComponent.style.display = "initial"
+          setTimeout(() => {
+            successComponent.style.display = "none"
+          }, 2000)
         } else {
           errorComponent.innerHTML = res
           errorComponent.style.display = "initial"
+          setTimeout(() => {
+            errorComponent.style.display = "none"
+          }, 2000)
         }
 
       } else {
         errorComponent.innerHTML = "Preencha corretamente os campos."
         errorComponent.style.display = "initial"
-      }      
+        setTimeout(() => {
+          errorComponent.style.display = "none"
+        }, 2000)
+      }
     });
 
     const applyCpfMask = (input) => {
