@@ -19,6 +19,7 @@
 
   <style>
     .map-container {
+      border-radius: 10px;
       height: 15em;
       width: 26em;
     }
@@ -70,7 +71,7 @@
                 <p id="countDevice" class="card-text h1"></p>
               </div>
             </div>
-            <div class="card text-center mb-3" style="width:10em;">
+            <div class="card text-center mb-2" style="width:10em;">
               <div class="card-body">
                 <h5 class="card-title h6">Usuários</h5>
                 <p id="countUser" class="card-text h1"></p>
