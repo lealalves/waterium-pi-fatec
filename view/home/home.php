@@ -38,7 +38,7 @@
       }
 
       .map-container {
-        height: 40em;
+        height: 30em;
         width: 50em;
       }
     }
@@ -115,7 +115,7 @@
     let infoWindow
     function initMap() {
       let map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: -24.4942, lng: -47.8432 },
+        center: { lat: -24.509196, lng: -47.849302 },
         disableDefaultUI: true,
         zoom: 14,
         styles:
