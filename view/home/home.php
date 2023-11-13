@@ -19,8 +19,8 @@
 
   <style>
     .map-container {
-      height: 30em;
-      width: 25em;
+      height: 15em;
+      width: 26em;
     }
 
     .bd-placeholder-img {
@@ -37,8 +37,8 @@
       }
 
       .map-container {
-        height: 50em;
-        width: 60em;
+        height: 40em;
+        width: 50em;
       }
     }
   </style>
@@ -77,23 +77,26 @@
               </div>
             </div>
           </div>
-          <h1 class="h2">Mapa dos bairros</h1>
-          <div class="row">
-            <div class="col">
-              <div id="map" class="map-container"></div>
-            </div>
+        </div>
+        <div class="row align-items-center">
+          <!-- Mapa -->
+          <div class="col-md-6 mb-5">
+            <h1 class="h2">Mapa dos bairros</h1>
+            <div id="map" class="map-container"></div>
           </div>
-          <h1 class="h2 mt-3">Gráficos de consumo por bairro</h1>
-          <div class="col-md-6 py-1 mb-5">
-            <div class="card">
-              <div class="card-body">
-                <canvas id="chBar"></canvas>
-              </div>
-            </div>
+
+          <!-- Gráfico -->
+          <div class="col-md-6 col-sm-12 mt-3 mt-md-0">
+            <h1 class="h2">Gráficos de consumo por bairro</h1>
+            <canvas id="chBar"></canvas>
           </div>
         </div>
       </main>
     </div>
+  </div>
+  </div>
+  </div>
+  </div>
   </div>
 
   <script>
