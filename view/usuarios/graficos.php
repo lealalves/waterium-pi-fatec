@@ -152,10 +152,12 @@
                 </select>
               </div>
               <div class="col">
-                <button type="button" class="btn btn-primary" onclick="deleteDevice()">Apagar</button>
+                <button type="button" class="btn btn-primary" onclick="deleteDevice()" id="btnDeleteDevice"
+                  disabled>Apagar</button>
               </div>
               <div class="col">
-                <button type="button" class="btn btn-primary" onclick="relatorioPagina()" id="btnRelatorio">Relatório</button>
+                <button type="button" class="btn btn-primary" onclick="relatorioPagina()" id="btnRelatorio"
+                  disabled>Relatório</button>
               </div>
             </div>
             <div id="deviceInfo" style="display: none;">
@@ -232,6 +234,7 @@
     }
 
     const setMarker = (latLng, map, deviceCod) => {
+      selectDevice.value = deviceCod
       const marker = new google.maps.Marker({
         position: latLng,
         map: map,
@@ -322,6 +325,9 @@
 
       if (arr.dispositivos) {
         document.querySelector("#deviceCount").innerHTML = arr.dispositivos.length
+        document.querySelector("#btnRelatorio").disabled = false
+        document.querySelector("#btnDeleteDevice").disabled = false
+
         setDeviceList(arr.dispositivos)
       }
 
@@ -380,11 +386,13 @@
         if (item.codigo_dispositivo == dcod) {
           if (item.cloro != null) {
             document.querySelector("#btnRelatorio").disabled = false
+            document.querySelector("#btnDeleteDevice").disabled = false
             haveData = true
             let latLng = { lat: Number(item.latitude), lng: Number(item.longitude) }
             setDevice(dcod, latLng, haveData)
           } else {
             document.querySelector("#btnRelatorio").disabled = true
+            document.querySelector("#btnDeleteDevice").disabled = true
             haveData = false
             document.querySelector("#deviceInfo").style.display = "none"
             document.querySelector("#erro").innerHTML = `Dispositivo ID ${inputHiddenIdDispositivo.value} sem dados.`
@@ -414,7 +422,7 @@
     }
 
     const deleteDevice = async () => {
-      const codigo_dispositivo = inputHiddenIdDispositivo.value
+      const codigo_dispositivo = inputHiddenIdDispositivo.value != null ? inputHiddenIdDispositivo.value : selectDevice.value
       const req = await fetch(`http://localhost:80/waterium-pi-fatec/controller/dispositivos/deletar.php?codigo_dispositivo=${codigo_dispositivo}`)
 
       const res = await req.json()
@@ -495,6 +503,9 @@
       if (res.mensagem) {
         document.querySelector("#sucesso").innerHTML = res.mensagem
         document.querySelector("#sucesso").style.display = "initial"
+        setTimeout(() => {
+          document.querySelector("#sucesso").style.display = "none"
+        }, 2000)
 
       } else {
         document.querySelector("#erro").innerHTML = "Erro ao atualizar nome do usuário."
