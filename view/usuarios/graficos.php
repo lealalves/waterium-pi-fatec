@@ -394,7 +394,6 @@
             setDevice(dcod, latLng, haveData)
           } else {
             document.querySelector("#btnRelatorio").disabled = true
-            document.querySelector("#btnDeleteDevice").disabled = true
             haveData = false
             document.querySelector("#deviceInfo").style.display = "none"
             document.querySelector("#erro").innerHTML = `Dispositivo ID ${inputHiddenIdDispositivo.value} sem dados.`
