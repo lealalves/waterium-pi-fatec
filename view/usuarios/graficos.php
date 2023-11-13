@@ -123,19 +123,14 @@
               <div class="d-flex align-items-center justify-content-center mt-3 mb-5">
                 <div class="card text-center m-2 p-3">
                   <div class="card-body">
-                    <h5 class="card-title h6">Qualidade</h5>
-                    <p class="card-text h1">?</p>
-                  </div>
-                </div>
-                <div class="card text-center m-2 p-3">
-                  <div class="card-body">
                     <h5 class="card-title h6">Dispositivos</h5>
                     <p id="deviceCount" class="card-text h1">0</p>
                   </div>
                 </div>
               </div>
               <button type="button" class="btn btn-primary m-auto mb-5 w-50" onClick="deleteUser()">Deletar
-                Usuário</button>
+                Usuário
+              </button>
             </div>
             <div id="deviceInfo" style="display: none;">
               <div class="d-flex justify-content-between align-items-center text-center mb-2 w-100">
@@ -145,7 +140,10 @@
                   </select>
                 </div>
                 <div class="col">
-                  <button type="button" class="btn btn-primary" onclick="deleteDevice()">Apagar Dispositivo</button>
+                  <button type="button" class="btn btn-primary" onclick="deleteDevice()">Apagar</button>
+                </div>
+                <div class="col">
+                  <button type="button" class="btn btn-primary" onclick="relatorioPagina()">Relatório</button>
                 </div>
               </div>
               <div class="row mb-5">
@@ -217,7 +215,7 @@
       });
 
     }
-    
+
     const setMarker = (latLng, map, deviceCod) => {
       const marker = new google.maps.Marker({
         position: latLng,
@@ -237,10 +235,10 @@
       map.setCenter(latLng);
     }
 
-    const getUser = async (e = null, query = null) => {    
+    const getUser = async (e = null, query = null) => {
       while (selectDevice.firstChild) {
-          selectDevice.removeChild(selectDevice.firstChild);
-        }
+        selectDevice.removeChild(selectDevice.firstChild);
+      }
 
       const cpf = query != null ? query : document.querySelector("#searchCpf").value
       if (cpf) {
@@ -290,7 +288,7 @@
         selectDevice.appendChild(optionSelect)
         document.querySelector("#deviceInfo").style.display = "initial"
       })
-      
+
       selectDevice.value = deviceCod
       setDevice(deviceCod, latLng)
     }
@@ -372,16 +370,23 @@
       });
     }
 
+    const relatorioPagina = () => {
+      const cpf = inputHiddenCpf.value
+      const dcod = inputHiddenIdDispositivo.value
+      const url = './relatorio.php'
+      window.location.href = `${url}?cpf=${cpf}&dcod=${dcod}`;
+    }
+
     const obterParametroURL = (nomeParametro) => {
       var urlSearchParams = new URLSearchParams(window.location.search);
       return urlSearchParams.get(nomeParametro);
     }
     window.onload = async () => {
       getUser(null, obterParametroURL("cpf"))
-    };    
-    
+    };
+
   </script>
-    <script async
+  <script async
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQwG7kSVo3XFVSaAt3tfLSt8fAwuM0XvY&callback=initMap">
     </script>
 </body>
