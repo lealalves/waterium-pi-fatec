@@ -13,9 +13,9 @@ try {
   $updateQuery->execute();
 
   if ($updateQuery->rowCount() > 0) {
-    echo json_encode("Nome atualizado com sucesso.");
+    echo json_encode(array("mensagem" => "Nome atualizado com sucesso."));
   } else {
-    echo json_encode("Erro ao atualizar nome de usuário.");    
+    echo json_encode("Erro ao atualizar nome de usuário.");
   }
 
 } catch (PDOException $e) {
