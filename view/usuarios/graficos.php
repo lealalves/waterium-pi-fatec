@@ -132,34 +132,36 @@
                 </div>
                 <hr>
               </div>
-              <div class="d-flex align-items-center flex-column justify-content-center mt-3 mb-5">
+              <div class="d-flex align-items-center flex-column justify-content-center mb-3">
                 <div class="card text-center m-2 p-3">
                   <div class="card-body">
                     <h5 class="card-title h6">Dispositivos</h5>
                     <p id="deviceCount" class="card-text h1">0</p>
                   </div>
                 </div>
-                <button type="button" class="btn btn-primary m-auto w-25" id="btnGenerateCode"
+                <button type="button" class="btn btn-primary m-auto w-50 mb-2 mt-2" id="btnGenerateCode"
                   onclick="generateDeviceCode()">Gerar Código
                 </button>
+                <button type="button" class="btn btn-primary m-auto mb-2 w-50" onClick="deleteUser()">Deletar
+                  Usuário
+                </button>
               </div>
-              <button type="button" class="btn btn-primary m-auto mb-5 w-50" onClick="deleteUser()">Deletar
-                Usuário
-              </button>
             </div>
             <div class="d-flex justify-content-between align-items-center text-center mb-2 w-100">
               <h5>Informações do dispositivo:</h5>
-              <div class="col-sm-6 ms-2">
+              <div class="col-sm-6">
                 <select class="form-control" id="selectDevice" onchange="changeDevice(event)">
                 </select>
               </div>
-              <div class="col">
-                <button type="button" class="btn btn-primary" onclick="deleteDevice()" id="btnDeleteDevice"
-                  disabled>Apagar</button>
-              </div>
-              <div class="col">
-                <button type="button" class="btn btn-primary" onclick="relatorioPagina()" id="btnRelatorio"
-                  disabled>Relatório</button>
+              <div class="d-flex flex-row">
+                <div class="col">
+                  <button type="button" class="btn btn-primary me-2" onclick="deleteDevice()" id="btnDeleteDevice"
+                    disabled>Apagar</button>
+                </div>
+                <div class="col">
+                  <button type="button" class="btn btn-primary" onclick="relatorioPagina()" id="btnRelatorio"
+                    disabled>Relatório</button>
+                </div>
               </div>
             </div>
             <div id="deviceInfo" style="display: none;">
@@ -194,9 +196,12 @@
                     </div>
                   </div>
                 </div>
+                <div class="row">
+                  <p><b>Status atual:</b> <span id="statusDevice"></span></p>
+                </div>
+                <h4>Localização do aparelho:</h4>
+                <div id="map"></div>
               </div>
-              <h5>Geolocalização do aparelho:</h5>
-              <div id="map"></div>
             </div>
           </div>
         </div>
@@ -262,9 +267,8 @@
       for (let i = 0; i < maxLength; i++) {
         randomCode += Math.floor(Math.random() * 10);
       }
-      console.log(inputHiddenIdDispositivo.value);
+
       inputHiddenIdDispositivo.value = randomCode
-      console.log(inputHiddenIdDispositivo.value);
 
       registerDevice()
     }
@@ -370,6 +374,7 @@
 
         deviceLocInfos(coords.lat, coords.lng)
         setMarker(latLng, map, dcod)
+        getRelatorios()
         generateCharts()
       } else {
         document.querySelector("#btnRelatorio").disabled = true
@@ -437,6 +442,13 @@
           document.location.reload()
         }, 1000)
       }
+    }
+
+    const getRelatorios = async () => {
+      const req = await fetch(`http://localhost:80/waterium-pi-fatec/controller/dispositivos/listarRelatorios.php?dcod=${inputHiddenIdDispositivo.value}`)
+
+      let [relatorio] = await req.json()
+      document.querySelector("#statusDevice").innerHTML = relatorio.descricao
     }
 
     function deviceLocInfos(lat, lng) {
