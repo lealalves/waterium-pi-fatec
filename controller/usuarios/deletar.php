@@ -1,17 +1,16 @@
 <?php
 require_once("../conexao.php");
 
-$cpf = (int) $_GET["cpf"];
+$cpf = $_GET["cpf"];
 
 $conexao = novaConexao();
 
-$deleteQuery = "DELETE FROM usuario WHERE cpf=?";
-
 try {
-  $result = $conexao->prepare($deleteQuery);
-  $result->execute([$cpf]);
+  $deleteQuery = $conexao->prepare("DELETE FROM usuario WHERE cpf = :cpf");
+  $deleteQuery->bindParam(':cpf', $cpf, PDO::PARAM_STR);
+  $deleteQuery->execute();
 
-  if ($result->rowCount() > 0) {
+  if ($deleteQuery->rowCount() > 0) {
     echo json_encode(array("mensagem" => "Usuário deletado com sucesso"));
   } else {
     echo json_encode(array("erro" => "Erro ao deletar usuario"));
