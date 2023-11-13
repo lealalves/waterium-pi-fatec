@@ -59,7 +59,7 @@
             </div>
             <div class="mb-3">
               <label for="cpf" class="form-label">CPF</label>
-              <input type="text" class="form-control" id="cpf" placeholder="Informe o CPF">
+              <input type="text" class="form-control" id="cpf" placeholder="Informe o CPF" oninput="applyCpfMask(this)">
             </div>
             <button id="btnCadastrar" class="btn btn-primary">Cadastrar</button>
           </form>
@@ -86,31 +86,53 @@
 
     btnCadastrar.addEventListener("click", async (event) => {
       event.preventDefault()
+
       const formData = new FormData();
 
       let cpf = document.querySelector("#cpf").value
       let nome = document.querySelector("#nome").value
 
-      formData.append("nome", nome)
-      formData.append("cpf", cpf)
+      if(cpf.length == 14 && nome.length > 4){
+        formData.append("nome", nome)
+        formData.append("cpf", cpf)
+  
+        const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/usuarios/cadastrar.php", {
+          method: "POST",
+          body: formData
+        })
+  
+        const res = await req.json()
+  
+        if (res == "Usuario cadastrado com sucesso.") {
+          successComponent.innerHTML = res
+          successComponent.style.display = "initial"
+        } else {
+          errorComponent.innerHTML = res
+          errorComponent.style.display = "initial"
+        }
 
-      const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/usuarios/cadastrar.php", {
-        method: "POST",
-        body: formData
-      })
-
-      const res = await req.json()
-
-      if (res == "Usuario cadastrado com sucesso.") {
-        successComponent.innerHTML = res
-        successComponent.style.display = "initial"
       } else {
-        errorComponent.innerHTML = res
+        errorComponent.innerHTML = "Preencha corretamente os campos."
         errorComponent.style.display = "initial"
+      }      
+    });
+
+    const applyCpfMask = (input) => {
+      // Remove caracteres não numéricos
+      var value = input.value.replace(/\D/g, '');
+
+      // Adiciona a máscara ao CPF
+      if (value.length <= 11) {
+        value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+      } else {
+        // Se o CPF for maior que 11 dígitos, limita para os 11 primeiros dígitos
+        value = value.substring(0, 11);
+        value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
       }
 
-
-    });
+      // Atualiza o valor do campo
+      input.value = value;
+    }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
