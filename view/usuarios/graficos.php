@@ -78,8 +78,17 @@
                   <div class="col-sm-3">
                     <p class="mb-0">Nome Completo</p>
                   </div>
-                  <div class="col-sm-9">
-                    <p id="txtUserName" class="text-muted mb-0"></p>
+                  <div class="col-sm-9 position-relative">
+                    <div class="d-flex justify-content-between align-items-center flex-row">
+                      <p id="txtUserName" class="text-muted mb-0"></p>
+                      <input type="text" id="txtUserNameEdit" class="form-control"
+                        style="display: none; width: max(20vw, 200px);">
+                      <div id="editButtons" class="d-flex flex-row">
+                        <button id="btnEdit" class="btn btn-sm btn-primary me-2" onclick="toggleEdit()">Editar</button>
+                        <button id="btnSave" class="btn btn-sm btn-success" style="display: none;"
+                          onclick="saveChanges()">Salvar</button>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <hr>
@@ -381,6 +390,47 @@
       var urlSearchParams = new URLSearchParams(window.location.search);
       return urlSearchParams.get(nomeParametro);
     }
+
+    const toggleEdit = () => {
+      var txtUserName = document.getElementById('txtUserName');
+      var txtUserNameEdit = document.getElementById('txtUserNameEdit');
+      var btnSave = document.getElementById('btnSave');
+
+      txtUserName.style.display = txtUserName.style.display === 'none' ? 'block' : 'none';
+      txtUserNameEdit.style.display = txtUserNameEdit.style.display === 'none' ? 'block' : 'none';
+      btnSave.style.display = btnSave.style.display === 'none' ? 'block' : 'none';
+
+      // Preencher o campo de edição com o texto atual
+      txtUserNameEdit.value = txtUserName.textContent.trim();
+    }
+
+    const saveChanges = async () => {
+      var txtUserName = document.getElementById('txtUserName');
+      var txtUserNameEdit = document.getElementById('txtUserNameEdit');
+      var btnSave = document.getElementById('btnSave');
+
+      // Implemente a lógica para salvar as alterações aqui
+      var editedName = txtUserNameEdit.value;
+
+      let formData = new FormData();
+      formData.append('cpf', inputHiddenCpf.value);
+      formData.append('nome', editedName);
+      const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/usuarios/atualizar.php", {
+        method: "POST",
+        body: formData
+      })
+
+      console.log(await req.json());
+      // Substituir o texto original pelo nome editado
+      txtUserName.textContent = editedName;
+
+      // Exibir o texto e ocultar o campo de input e o botão Salvar
+      txtUserName.style.display = 'block';
+      txtUserNameEdit.style.display = 'none';
+      btnSave.style.display = 'none';
+    }
+
+
     window.onload = async () => {
       getUser(null, obterParametroURL("cpf"))
     };
