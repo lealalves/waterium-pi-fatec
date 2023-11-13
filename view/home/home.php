@@ -92,16 +92,27 @@
             <h1 class="h2">Mapa dos bairros</h1>
             <div id="map" class="map-container"></div>
           </div>
-
         </div>
-      </main>
-    </div>
-  </div>
-  </div>
-  </div>
-  </div>
-  </div>
 
+        <div class="row mb-5">
+          <h2>Lista de Relatórios</h2>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>ID Dispositivo</th>
+                <th>Nome do Cliente</th>
+                <th>Descricao</th>
+                <th>Recomendação</th>
+              </tr>
+            </thead>
+            <tbody id="relatoriosList">
+            </tbody>
+          </table>
+        </div>
+    </div>
+    </main>
+  </div>
+  </div>
   <script>
     let colorsMap = [
       ['#3498db', '#2c3e50'],
@@ -183,9 +194,49 @@
       document.querySelector("#countUser").innerHTML = res.length
     }
 
+    const getRelatorios = async () => {
+      const req = await fetch("http://localhost:80/waterium-pi-fatec/controller/dispositivos/listarRelatorios.php")
+
+      userList = await req.json()
+      setRelatoriosList(userList)
+    }
+
+    const setRelatoriosList = (arr) => {
+      console.log(arr);
+      let table = document.querySelector("#relatoriosList")
+
+      while (table.firstChild) {
+        table.removeChild(table.firstChild);
+      }
+
+      arr.map(item => {
+        let linha = document.createElement("tr")
+        linha.style.verticalAlign = "middle"
+        linha.innerHTML = `
+          <td>${item.codigo_dispositivo}</td>
+          <td>${item.nome}</td>
+          <td>${item.descricao}</td>
+          <td>${item.recomendacao}</td>
+          <td onClick="redirectPage(event)">
+            <button data-value="${item.cpf}" type="button" class="btn btn-secondary">
+              Detalhes
+            </button>
+          </td>
+          `
+        table.append(linha)
+      })
+    }
+
+    const redirectPage = (e) => {
+      const cpf = e.target.dataset.value
+      const url = '../usuarios/graficos.php'
+      window.location.href = `${url}?cpf=${cpf}`;
+    }
+
     window.onload = async () => {
       getDispositivos()
       getUsuarios()
+      getRelatorios()
     }
 
   </script>
