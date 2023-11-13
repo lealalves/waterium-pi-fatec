@@ -80,17 +80,17 @@
           </div>
         </div>
         <div class="row align-items-center">
+          <!-- Gráfico -->
+          <div class="col-md-6 col-sm-12 mt-3 mt-md-0">
+            <h1 class="h2">Gráficos de consumo por bairro</h1>
+            <canvas id="chBar"></canvas>
+          </div>
           <!-- Mapa -->
           <div class="col-md-6 mb-5">
             <h1 class="h2">Mapa dos bairros</h1>
             <div id="map" class="map-container"></div>
           </div>
 
-          <!-- Gráfico -->
-          <div class="col-md-6 col-sm-12 mt-3 mt-md-0">
-            <h1 class="h2">Gráficos de consumo por bairro</h1>
-            <canvas id="chBar"></canvas>
-          </div>
         </div>
       </main>
     </div>
