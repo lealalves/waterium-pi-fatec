@@ -326,7 +326,7 @@
 
         setTimeout(() => {
           document.location.href = './graficos.php'
-        }, 2000)
+        }, 1000)
       }
 
     }
@@ -344,7 +344,7 @@
 
         setTimeout(() => {
           document.location.reload()
-        }, 2000)
+        }, 1000)
       }
     }
 
